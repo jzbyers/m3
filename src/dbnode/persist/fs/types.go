@@ -628,3 +628,11 @@ type InfoFileResultsPerShard map[uint32][]ReadInfoFileResult
 
 // InfoFilesByNamespace maps a namespace to info files grouped by shard.
 type InfoFilesByNamespace map[namespace.Metadata]InfoFileResultsPerShard
+
+// ReadIndexInfoFilesFn reads in index info files given a namespace.
+type ReadIndexInfoFilesFn func(
+	filePathPrefix string,
+	namespace ident.ID,
+	readerBufferSize int,
+	fileSetType persist.FileSetType,
+) []ReadIndexInfoFileResult
