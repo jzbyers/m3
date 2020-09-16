@@ -87,7 +87,7 @@ func TestCleanupManagerCleanupCommitlogsAndSnapshots(t *testing.T) {
 		title                string
 		snapshotMetadata     snapshotMetadataFilesFn
 		commitlogs           commitLogFilesFn
-		snapshots            snapshotFilesFn
+		snapshots            fs.SnapshotFilesFn
 		expectedDeletedFiles []string
 		expectErr            bool
 	}{
