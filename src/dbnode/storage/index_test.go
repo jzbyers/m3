@@ -397,13 +397,14 @@ func TestNamespaceIndexSnapshotColdBlock(t *testing.T) {
 		shards[shard] = struct{}{}
 	}
 
+	blockStart := now.Add(-test.indexBlockSize)
 	mockBlock := index.NewMockBlock(ctrl)
 	mockBlock.EXPECT().MemorySegmentsData(gomock.Any()).Return([]fst.SegmentData{fst.SegmentData{}}, nil)
 	mockBlock.EXPECT().IsSealed().Return(true)
+	mockBlock.EXPECT().StartTime().Return(blockStart)
 	mockBlock.EXPECT().Close().Return(nil)
-
-	blockStart := now.Add(-test.indexBlockSize)
 	idx.state.blocksByTime[xtime.ToUnixNano(blockStart)] = mockBlock
+
 	prepareOpts := xtest.CmpMatcher(persist.IndexPrepareSnapshotOptions{
 		IndexPrepareOptions: persist.IndexPrepareOptions{
 			NamespaceMetadata: idx.nsMetadata,
@@ -457,13 +458,14 @@ func TestNamespaceIndexSnapshotWarmBlock(t *testing.T) {
 		shards[shard] = struct{}{}
 	}
 
+	blockStart := now.Add(-test.indexBlockSize)
 	mockBlock := index.NewMockBlock(ctrl)
 	mockBlock.EXPECT().MemorySegmentsData(gomock.Any()).Return([]fst.SegmentData{fst.SegmentData{}}, nil)
 	mockBlock.EXPECT().IsSealed().Return(false)
+	mockBlock.EXPECT().StartTime().Return(blockStart).AnyTimes()
 	mockBlock.EXPECT().Close().Return(nil)
-
-	blockStart := now.Add(-test.indexBlockSize)
 	idx.state.blocksByTime[xtime.ToUnixNano(blockStart)] = mockBlock
+
 	prepareOpts := xtest.CmpMatcher(persist.IndexPrepareSnapshotOptions{
 		IndexPrepareOptions: persist.IndexPrepareOptions{
 			NamespaceMetadata: idx.nsMetadata,
